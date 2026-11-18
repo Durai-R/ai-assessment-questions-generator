@@ -127,6 +127,8 @@ The MongoDB integration test reads `MONGO_TEST_URI` directly from the process en
 
 ## API reference
 
+For endpoint-by-endpoint request/response examples, cookie-jar authentication, the required `Origin` header, and representative errors, see [docs/API_EXAMPLES.md](docs/API_EXAMPLES.md).
+
 Examples below are illustrative and were not captured from a live Gemini-backed run. All request bodies and response fields are based on the implemented Pydantic schemas and route handlers.
 
 ### Endpoints
@@ -295,16 +297,7 @@ curl.exe -i -b $cookieJar -c $cookieJar -H 'Origin: http://localhost:5173' -X PO
 
 ## AI integration
 
-The integration lives in `backend/app/mock_generation.py` (despite the historical filename, this module contains the active Gemini implementation) and is called by the topic and question routers. The backend loads `GEMINI_API_KEY` and `GEMINI_MODEL` from its environment. The default model is `gemini-3.5-flash-lite`. Each SDK attempt has a 10-second timeout, meeting Gemini's reported minimum. The application retries only 503 responses, at most twice: delays increase from 250 ms to 500 ms, each with up to 200 ms of jitter. A 35-second overall deadline bounds the request. SDK retries are disabled so retries do not multiply. The shared frontend Axios timeout is 40 seconds.
-
-- Topic prompts include the validated subject as input data and request five relevant, distinct topics.
-- MCQ prompts include subject, topic, difficulty, and requested count as input data. They ask for exactly that many questions, four plausible options, one correct answer, and a supporting explanation.
-- Both requests configure structured JSON output with `response_mime_type="application/json"` and a response schema. A text-only instruction to return JSON is not the sole validation mechanism.
-- Pydantic validates topic and question response shapes. Topic names are trimmed and deduplicated case-insensitively. Question validation checks non-empty text and explanations, four distinct non-empty options, a correct-answer index from 0 to 3, and the exact requested count.
-- A generated response must pass validation before it can become a frontend draft. Saving is a separate operation and independently validates the reviewed question batch before writing it to MongoDB.
-- Live routes have no mock-response fallback: a draft is returned only after a successful Gemini response passes validation.
-
-These checks establish structural validity, not factual correctness. Review the generated answer and explanation before saving.
+Gemini drafts and their request flow, prompt templates, structured-output schemas, validation, error handling, environment variables, and verification limits are covered in [docs/AI_INTEGRATION.md](docs/AI_INTEGRATION.md). Structural validity does not establish factual correctness; review questions and answer keys before saving.
 
 ## Validation and error handling
 
@@ -360,7 +353,7 @@ During the latest retry-handling update, the backend syntax check passed and tes
 
 ## AI-assisted development documentation
 
-The detailed seven-question AI usage report is in [docs/AI_ASSISTED_DEVELOPMENT.md](docs/AI_ASSISTED_DEVELOPMENT.md). It distinguishes implemented protections and checks from live Gemini or manual accuracy checks that were not verified.
+The detailed seven-question AI usage report is in [docs/AI Assisted Development Report.pdf](<docs/AI Assisted Development Report.pdf>). It distinguishes implemented protections and checks from live Gemini or manual accuracy checks that were not verified.
 
 ## Known limitations and items to confirm
 
