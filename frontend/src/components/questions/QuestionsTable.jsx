@@ -1,13 +1,14 @@
 import { LETTERS } from '../../constants/app.js'
 import { normalizeQuestion } from '../../utils/questions.js'
 
-const QuestionsTable = ({ questions, onEdit, onDelete, showMetadata = true }) => (
+const QuestionsTable = ({ questions, onEdit, onDelete, showMetadata = true, startNumber = 1 }) => (
   <div className="table-scroll">
     <table className="questions-table">
-      <thead><tr>{showMetadata && <><th>Subject</th><th>Topic</th></>}<th>Question</th><th>Answer options</th><th>Correct answer</th><th>Explanation</th><th><span className="sr-only">Actions</span></th></tr></thead>
-      <tbody>{questions.map((rawQuestion) => {
+      <thead><tr><th>Q.No</th>{showMetadata && <><th>Subject</th><th>Topic</th></>}<th>Question</th><th>Answer options</th><th>Correct answer</th><th>Explanation</th><th><span className="sr-only">Actions</span></th></tr></thead>
+      <tbody>{questions.map((rawQuestion, index) => {
         const question = normalizeQuestion(rawQuestion)
         return <tr key={question.local_id || question.id || question.question_text}>
+          <td className="question-number">{startNumber + index}</td>
           {showMetadata && <><td><span className="cell-primary">{question.subject || '—'}</span>{question.difficulty && <span className="difficulty-tag">{question.difficulty}</span>}</td>
           <td>{question.topic || '—'}</td></>}
           <td className="question-cell">{question.question_text}</td>

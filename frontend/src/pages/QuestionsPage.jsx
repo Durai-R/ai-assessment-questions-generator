@@ -161,7 +161,7 @@ const QuestionsPage = () => {
   } else {
     questionResults = <div className="table-region">
       {loading && <div className="table-loading" role="status"><Spinner /> Updating results…</div>}
-      <QuestionsTable questions={rows} onEdit={(row) => setEditItem(row)} onDelete={(row) => { setDeleteItem(row); setDeleteError('') }} />
+      <QuestionsTable questions={rows} startNumber={(page - 1) * QUESTIONS_PAGE_SIZE + 1} onEdit={(row) => setEditItem(row)} onDelete={(row) => { setDeleteItem(row); setDeleteError('') }} />
     </div>
   }
 

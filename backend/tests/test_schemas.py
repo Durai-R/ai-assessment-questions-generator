@@ -1,7 +1,27 @@
 import pytest
 from pydantic import ValidationError
 
-from app.schemas import DraftQuestion, QuestionGenerationRequest, QuestionUpdate, TopicSuggestions
+from app.schemas import (
+    Credentials,
+    DraftQuestion,
+    QuestionGenerationRequest,
+    QuestionUpdate,
+    TopicSuggestions,
+)
+
+
+@pytest.mark.parametrize(
+    "password",
+    ["short", "p" * 129],
+)
+def test_credentials_password_length_must_be_between_eight_and_128_characters(password):
+    with pytest.raises(ValidationError):
+        Credentials(email="user@example.com", password=password)
+
+
+def test_credentials_accept_passwords_at_both_length_boundaries():
+    assert len(Credentials(email="user@example.com", password="p" * 8).password) == 8
+    assert len(Credentials(email="user@example.com", password="p" * 128).password) == 128
 
 
 def test_question_text_and_options_are_trimmed_and_unique_case_insensitively():

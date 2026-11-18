@@ -147,7 +147,8 @@ h1, h2, h3, p { margin-top: 0; }
 .questions-table td { min-width: 90px; padding: 15px 14px; color: #475467; border-bottom: 1px solid #edf0f4; font-size: 12px; line-height: 1.65; vertical-align: top; overflow-wrap: anywhere; }
 .questions-table tbody tr:last-child td { border-bottom: 0; }
 .questions-table tbody tr:hover { background: #fdfdff; }
-.questions-table th:nth-child(3) { min-width: 180px; }
+.questions-table th:nth-child(4), .questions-table th:nth-child(2) { min-width: 180px; }
+.questions-table th:first-child, .questions-table td.question-number { width: 58px; min-width: 58px; text-align: center; }
 .questions-table th:last-child, .questions-table td:last-child { width: 73px; }
 .cell-primary { display: block; color: #43495a; font-weight: 700; }
 .difficulty-tag { display: inline-block; margin-top: 6px; padding: 3px 6px; color: #7064c6; background: #f2f0ff; border-radius: 4px; font-size: 9px; }

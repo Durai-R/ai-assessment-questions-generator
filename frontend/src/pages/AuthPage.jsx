@@ -28,10 +28,13 @@ const AuthPage = ({ mode }) => {
     if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
       nextFieldErrors.email = 'Enter a valid email address.'
     }
+    const passwordLength = [...password].length
     if (!password) {
       nextFieldErrors.password = 'Password is required.'
-    } else if (isRegister && password.length < 8) {
-      nextFieldErrors.password = 'Use at least 8 characters.'
+    } else if (passwordLength < 8) {
+      nextFieldErrors.password = 'Password must be at least 8 characters.'
+    } else if (passwordLength > 128) {
+      nextFieldErrors.password = 'Password must be no more than 128 characters.'
     }
     if (Object.keys(nextFieldErrors).length) {
       setFieldErrors(nextFieldErrors)
@@ -74,7 +77,8 @@ const AuthPage = ({ mode }) => {
           </label>
           <label className="field">
             <span>Password</span>
-            <input type="password" autoComplete={isRegister ? 'new-password' : 'current-password'} value={password} onChange={(event) => { setPassword(event.target.value); setFieldErrors((current) => ({ ...current, password: '' })) }} placeholder="Enter your password" required aria-invalid={Boolean(fieldErrors.password)} aria-describedby={fieldErrors.password ? 'auth-password-error' : undefined} />
+            <input type="password" autoComplete={isRegister ? 'new-password' : 'current-password'} value={password} onChange={(event) => { setPassword(event.target.value); setFieldErrors((current) => ({ ...current, password: '' })) }} placeholder="Enter your password" required aria-invalid={Boolean(fieldErrors.password)} aria-describedby={fieldErrors.password ? 'auth-password-hint auth-password-error' : 'auth-password-hint'} />
+            <small id="auth-password-hint">Use 8–128 characters.</small>
             {fieldErrors.password && <small className="field-error" id="auth-password-error">{fieldErrors.password}</small>}
           </label>
           <button className="button primary full" disabled={pending} type="submit">
